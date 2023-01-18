@@ -1,0 +1,29 @@
+Lecture 85 - JavaScript CRUD using a Form and a Table with XMLHttpRequest Class
+
+
+
+You have to call the apis in Javscript .
+
+There 2 Ways you can call the apis in Pure/Vanilla/Core/Basic Javascript ?
+
+1. XMLHTTPRequest Class (Old Way)
+2. Fetch APIs. (New Way) Built-in Technique 
+			2 Assignment
+
+
+API (Backend Engineers)
+
+
+
+STRAPI CMS (Content Managment System)
+
+How to setup strapi  CMS(Content Manament System)
+
+
+
+https://gorest.co.in/
+
+
+client JSON Object -----------JSON string-----------> Server
+
+client Json Object <-----JSON.parse()------JSON string----------- Server
