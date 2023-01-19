@@ -27,3 +27,10 @@ https://gorest.co.in/
 client JSON Object -----------JSON string-----------> Server
 
 client Json Object <-----JSON.parse()------JSON string----------- Server
+
+
+ThunderClient
+		POST -> BODY -> JSON
+
+POSTMAN
+	POST -> BODY -> RAW -> JSON

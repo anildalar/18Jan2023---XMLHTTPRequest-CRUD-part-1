@@ -15,7 +15,33 @@
     <body>
         <div class="container">
             <div class="row">
-                <div class="col-4 a_tbdr">A</div>
+                <div class="col-4 a_tbdr">
+                    <form class="a_myform">
+                        <div class="mb-3">
+                            <label for="fullname" class="form-label">Full Name</label>
+                            <input required name="fullname" type="text" class="form-control" id="fullname">
+                        </div>
+                        <div class="mb-3">
+                          <label for="email" class="form-label">Email address</label>
+                          <input required type="email" name="email" class="form-control" id="email" aria-describedby="emailHelp"> 
+                        </div>
+                        <div class="mb-3">
+                          <label for="gender" class="form-label">Gender</label>
+                          <select id="gender" name="gender" class="form-select" aria-label="Default select example">
+                            <option value="male" selected>Male</option>
+                            <option value="female">Female</option>
+                          </select> 
+                        </div>
+                        <div class="mb-3">
+                          <label for="status" class="form-label">Status</label>
+                          <select id="status" name="status" class="form-select" aria-label="Default select example">
+                            <option value="active" selected>Active</option>
+                            <option value="inactive">Inactive</option>
+                          </select> 
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
                 <div class="col-8 a_tbdr">
                     <table class="table myusertable">
                         <thead>
@@ -43,13 +69,13 @@
         <script>
             let url = 'https://gorest.co.in';
             let tbdy = document.querySelector('table.myusertable tbody');
-
+            let xhr = new XMLHttpRequest();
 
             // let object = new ClassName();
             //1. object.property
             //2. object.method()
 
-            let xhr = new XMLHttpRequest();
+            
 
             xhr.onreadystatechange = function(){
                 if(xhr.readyState == 4 && xhr.status == 200){
@@ -82,7 +108,43 @@
             xhr.open("GET",`${url}/public/v2/users`);
             xhr.send();
 
+        </script>
+        <script>
+                let form = document.querySelector('form.a_myform');
+                let access_token = 'c4454a88767960a259643c0c28a3395745ed5e598c0914d2f78f8b613d62cc62';
+                form.onsubmit = function(e){ //e = event
+                    alert("ok");
+                    //return false;
+                    e.preventDefault();
+                    let n = form.querySelector('input#fullname').value;
+                    //string.toLowerCase();
+                    let eml = form.querySelector('input#email').value;
+                    let gender = form.querySelector('select#gender').value;
+                    let status = form.querySelector('select#status').value;
 
+                    let data = {
+                        "name":n,
+                        "email":eml,
+                        "gender":gender,
+                        "status":status
+                    }
+
+                    data = JSON.stringify(data);
+
+                    // JSON Object -> JSON.stringify() -> JSON String
+
+
+                    xhr.onreadystatechange = function(){
+                        if(xhr.readyState === 4  && xhr.status === 201){
+                            //console.log(xhr.responseText);
+                            swal("User Created Successfully!", "You clicked the button!", "success");
+                        }
+                    }
+                    xhr.open('POST',`${url}/public/v2/users`);
+                    xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+                    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+                    xhr.send(data);
+                }
         </script>
     </body>
 </html>
