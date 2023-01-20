@@ -1,4 +1,4 @@
-Lecture 85 - JavaScript CRUD using a Form and a Table with XMLHttpRequest Class
+Lecture 85 - JavaScript CRUD using a Form and a Table with XMLHttpRequest Class 
 
 
 
@@ -33,4 +33,8 @@ ThunderClient
 		POST -> BODY -> JSON
 
 POSTMAN
-	POST -> BODY -> RAW -> JSON
+	 POST -> BODY -> RAW -> JSON
+
+There are 2 types of APIs.
+1. Public API
+2. Protected API. (Requred Valid Token)
