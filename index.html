@@ -16,6 +16,24 @@
         </style>
     </head>
     <body>
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel"></h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="container">
             <div class="row">
                 <div class="col-4 a_tbdr">
@@ -95,9 +113,9 @@
                                     <td>${user.email}</td>
                                     <td>${user.status}</td>
                                     <td>
-                                        <button class="btn btn-success btn-sm">View</button>
-                                        <button class="btn btn-primary btn-sm">Edit</button>
-                                        <button class="btn btn-danger btn-sm" onclick="deleteUser(this)">Delete</button>
+                                        <button class="btn btn-success btn-sm a_viewbtn" data-bs-toggle="modal" data-bs-target="#exampleModal">View</button>
+                                        <button class="btn btn-primary btn-sm a_editbtn" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button>
+                                        <button class="btn btn-danger btn-sm a_deletebtn" onclick="deleteUser(this)">Delete</button>
                                     </td>
                                 </tr>`;
                     }
@@ -159,22 +177,93 @@
                 let deleteUser = (elem)=>{ // elem is formal argument which contain this ref
                     let tr = elem.closest('tr');
                     let userid = tr.querySelector('td:first-child').innerHTML;
-                    xhr.onreadystatechange = function(){
-                        if(xhr.readyState === 4 && xhr.status === 204){
-                            tr.remove();
-                            swal("User Deleted Successfully!", "You clicked the button!", "success");
-                        
-                        }
-                        if(xhr.readyState === 4 && xhr.status === 404){
-                            swal("User Not Found!", "You clicked the button!", "error");
-                        }
-                    }
-                    //https://gorest.co.in/public/v2/users/365
+                    swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this imaginary file!",
+                        icon: "warning",
+                        buttons: true,
+                        dangerMode: true,
+                      })
+                      .then((willDelete) => {
+                        if (willDelete) {
+                            //Call the delete api here,
+                            xhr.onreadystatechange = function(){
+                                if(xhr.readyState === 4 && xhr.status === 204){
+                                    tr.remove();
+                                    swal("User Deleted Successfully!", {
+                                        icon: "success",
+                                    });
+                                }
+                                if(xhr.readyState === 4 && xhr.status === 404){
+                                    swal("User Not Found!", "You clicked the button!", "error");
+                                }
+                            }
+                            //https://gorest.co.in/public/v2/users/365
+                            
+                            xhr.open('DELETE',`${url}/public/v2/users/${userid}`);
+                            xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
+                            xhr.send();    
+                        } 
+                    });
                     
-                    xhr.open('DELETE',`${url}/public/v2/users/${userid}`);
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + access_token);
-                    xhr.send();
+
+                    
                 } // ES6 Fat arrow notation
+                
+                let mtitle =  document.querySelector('h1.modal-title');
+                let mbody =  document.querySelector('div.modal-body');
+                document.addEventListener('click',function(e){
+                    console.log(e.target.innerHTML);
+
+                    let userid = e.target.closest('tr').querySelector('td:first-child').innerHTML;
+                    let firstname = e.target.closest('tr').querySelector('td:nth-child(2)').innerHTML;
+                    let gender = e.target.closest('tr').querySelector('td:nth-child(3)').innerHTML;
+                    let email = e.target.closest('tr').querySelector('td:nth-child(4)').innerHTML;
+                    if(e.target.innerHTML === 'View'){
+                        //alert('OKOK');
+
+                        mtitle.innerHTML='User Details';
+                        mbody.innerHTML = `<ul class="list-group">
+                                                <li class="list-group-item">Id :- ${userid}</li>
+                                                <li class="list-group-item">Name:- ${firstname}</li>
+                                                <li class="list-group-item">Gender:- ${gender}</li>
+                                                <li class="list-group-item">Email:- ${email}</li>
+                                            </ul>`;
+                    }
+                    //we will check if the event is executed on the target elemen
+                })
+                document.addEventListener('click',function(e){
+                    console.log(e.target.innerHTML);
+                    if(e.target.innerHTML === 'Edit'){
+                        //alert('OKOK');
+                        let fn = e.target.closest('tr').querySelector('td:nth-child(2)').innerHTML;
+                        let gndr = e.target.closest('tr').querySelector('td:nth-child(3)').innerHTML;
+                        let eml = e.target.closest('tr').querySelector('td:nth-child(4)').innerHTML;
+
+                        mtitle.innerHTML='User edit form';
+                        mbody.innerHTML=`<form>
+                                            <input type="hidden" name="userid">
+                                            <div class="mb-3">
+                                                <label for="fname" class="form-label">First Name</label>
+                                                <input name="fname" value="${fn}" type="text" class="form-control" id="fname">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="gender" class="form-label">Gender</label>
+                                                <select name="gender" id="gender" class="form-select" aria-label="Default select example">
+                                                    <option value="male" ${ (gndr==='male')?'selected':'' }>Male</option>
+                                                    <option value="female" ${ (gndr==='female')?'selected':'' }>Female</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="email" class="form-label">Email</label>
+                                                <input name="email" value="${eml}" type="email" class="form-control" id="email">
+                                            </div>
+                                        </form>`; //Empty 
+
+                    }
+                    //we will check if the event is executed on the target elemen
+                })
+
         </script>
     </body>
 </html>

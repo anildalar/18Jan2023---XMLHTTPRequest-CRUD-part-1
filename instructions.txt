@@ -38,3 +38,15 @@ POSTMAN
 There are 2 types of APIs.
 1. Public API
 2. Protected API. (Requred Valid Token)
+
+
+
+` ${expression} `
+
+` ${ C?T:F} `
+
+` ${ gndr === 'male'?'selected':''} `
+
+Ternary Opertor
+
+Condition?True:False
